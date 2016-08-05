@@ -2,6 +2,8 @@
 
 const mine = 'M';
 const empty = 'e';
+const flag = 'F'; //'\u2691'
+const question = '?';
 
 function Board(width, numMines) {
     this.width = width;
@@ -75,6 +77,39 @@ function Board(width, numMines) {
     }
     this.updateMineCounters();
 
+    this.isLoser = function() {
+        var lost = false;
+        for (var i = 0; i < self.width; i++) {
+            for (var j = 0; j < self.width; j++) {
+                if (self.squares[i][j].content === mine && self.squares[i][j].revealed) {
+                    lost = true;
+                    break;
+                }
+            }
+        }
+      return lost;
+    };
+
+    this.isWinner = function() {
+        var flaggedAndRevealed = function (totalMines) {
+            var correct = 0;
+            var allNonMinesRevealed = undefined;
+            for (var i = 0; i < self.width; i++) {
+                for (var j = 0; j < self.width; j++) {
+                    if (self.squares[i][j].content === mine && self.squares[i][j].flagged === true) {
+                        correct++;
+                    }
+                    else if (!(self.squares[i][j].content === empty && self.squares[i][j].revealed)) {
+                        allNonMinesRevealed = false;
+                        break;
+                    }
+                }
+            }
+            return (totalMines === correct && allNonMinesRevealed !== false);
+        };
+    return flaggedAndRevealed(this.numMines);
+}
+
     this.render = function () {
         var content = $("#content");
         content.empty();
@@ -87,12 +122,25 @@ function Board(width, numMines) {
         content.css("width", function() {
             return $(".square").width() * width + 20;
         } );
+
+        $(".flagged").text(flag);
+        $(".questioned").text(question);
+
+
+        if (this.isWinner()) {
+            content.append("<div id='gameOver'>You win!</div>");
+        } else if (this.isLoser()) {
+            content.append("<div id='gameOver'>You blew it!</div>");
+        };
+
     };
 
     // Define this here instead of in Square, where it would otherwise
     // cause multiple bindings.
     $("#content").on('mousedown', '.square', function(event) {
         var index = $(this).index();
+
+        // Recursively reveal the empty areas around the clicked position
         function recursiveReveal(i,j) {
             if (i < 0 || i >= width) return;
             if (j < 0 || j >= width) return;
@@ -115,11 +163,12 @@ function Board(width, numMines) {
             }
         }
 
-        var row = Math.floor(index/width);
-        var col = index%width;
+        var row = Math.floor(index / width);
+        var col = index % width;
 
         if (event.which == 1)
             recursiveReveal(row,col);
+
         self.squares[row][col].squareClicked(event);
 
         self.render();
@@ -128,7 +177,6 @@ function Board(width, numMines) {
     $("#content").contextmenu(function() {
         return false;
     });
-
 }
 
 function Square(content) {
@@ -147,7 +195,6 @@ function Square(content) {
         } else {
             reveal();
         }
-
     };
 
     var reveal = function() {
@@ -189,6 +236,6 @@ function Square(content) {
     }
 }
 $(function(){
-    var board = new Board(10, 9);
+    var board = new Board(9, 10);
     board.render();
 });
