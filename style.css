@@ -1,0 +1,28 @@
+#content div {
+
+}
+.square {
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+}
+
+.revealed {
+    background-color: darkgray;
+    border: 1px solid dimgray;
+}
+
+.unrevealed {
+    background-color: cornflowerblue;
+    border: 1px solid blue;
+}
+
+.questioned {
+    background-color: orange;
+    border: 1px solid orangered;
+}
+
+.flagged {
+    background-color: red;
+    border: 1px solid darkred;
+}
