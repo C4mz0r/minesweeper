@@ -46,8 +46,8 @@
       <file leaf-file-name="minesweeper.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/minesweeper.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1474">
-              <caret line="131" column="22" selection-start-line="131" selection-start-column="22" selection-end-line="131" selection-end-column="22" />
+            <state relative-caret-position="-79">
+              <caret line="166" column="4" selection-start-line="166" selection-start-column="4" selection-end-line="166" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -227,12 +227,12 @@
       <option name="presentableId" value="Default" />
       <updated>1470197367856</updated>
       <workItem from="1470197369187" duration="4137000" />
-      <workItem from="1470343648940" duration="18632000" />
+      <workItem from="1470343648940" duration="19315000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="22769000" />
+    <option name="totallyTimeSpent" value="23452000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="51" y="30" width="1869" height="986" extended-state="6" />
@@ -308,8 +308,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/minesweeper.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1474">
-          <caret line="131" column="22" selection-start-line="131" selection-start-column="22" selection-end-line="131" selection-end-column="22" />
+        <state relative-caret-position="-79">
+          <caret line="166" column="4" selection-start-line="166" selection-start-column="4" selection-end-line="166" selection-end-column="4" />
           <folding />
         </state>
       </provider>

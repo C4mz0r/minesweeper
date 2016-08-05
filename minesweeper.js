@@ -3,19 +3,18 @@
 const mine = 'M';
 const empty = 'e';
 
-
 function Board(width, numMines) {
-    //this.dimension = width*width;
     this.width = width;
     this.numMines = numMines;
     this.squares = [];
     var self = this;
 
     // Initialized the grid
-    for (let i = 0; i < width; i++){
+    for (var i = 0; i < width; i++){
         this.squares.push(new Array(width));
     }
 
+    // Randomly select where mines will be placed
     this.chooseMinePositions = function(width, numMines) {
         var plantMines = [];
         while( plantMines.length < numMines ) {
@@ -29,20 +28,20 @@ function Board(width, numMines) {
 
 
 
-
-    var checkArrayLocation = function(array, indexX, indexY, property, value) {
-        if (indexX < 0 || indexX >= width)
-            return false;
-
-        if (array[indexX][indexY]) {
-            if ((array[indexX][indexY])[property] == value)
-                return true;
-        }
-        return false;
-    };
-
-    // Update square counts
+    // Update the adjacent mine count for each square
     this.updateMineCounters = function () {
+
+        // Checks if specified property and value is present in specified location in 2d array
+        var checkArrayLocation = function(array, row, col, property, value) {
+            if (row < 0 || row >= width) // out of bounds
+                return false;
+            if (array[row][col]) {
+                if ((array[row][col])[property] == value)
+                    return true;
+            }
+            return false;
+        };
+
         for (var i = 0; i < self.squares.length; i++) {
             for (var j = 0; j < self.squares.length; j++) {
                 var count = 0;
@@ -77,23 +76,18 @@ function Board(width, numMines) {
     this.updateMineCounters();
 
     this.render = function () {
-        $("#content").empty();
+        var content = $("#content");
+        content.empty();
         for (var i = 0; i < this.width; i++) {
             for (var j= 0; j < this.width; j++) {
                 $("#content").append(this.squares[i][j].render());
             }
-            //$("#content").append(this.squares[i].content);
-
-            //if ( (i+1) % width == 0 )
-                //$("#content").append("<br>");
         }
 
-        $("#content").css("width", function() {
+        content.css("width", function() {
             return $(".square").width() * width + 20;
         } );
     };
-
-
 
     // Define this here instead of in Square, where it would otherwise
     // cause multiple bindings.
@@ -118,8 +112,7 @@ function Board(width, numMines) {
                 recursiveReveal(i+1, j-1);
                 recursiveReveal(i+1, j);
                 recursiveReveal(i+1, j+1);
-            } else
-                return;
+            }
         }
 
         var row = Math.floor(index/width);
@@ -161,7 +154,6 @@ function Square(content) {
         console.log("called reveal");
         self.revealed = true;
     };
-
 
     var toggleStatus = function() {
          if (!self.flagged && !self.questioned) {
