@@ -1,7 +1,7 @@
 "use strict";
 
 const mine = 'M';
-const empty = 'e';
+const empty = ' ';
 const flag = 'F'; //'\u2691'
 const question = '?';
 
@@ -114,14 +114,16 @@ function Board(width, numMines) {
         var content = $("#content");
         content.empty();
         for (var i = 0; i < this.width; i++) {
+            $("#content").append("<div class='row'></div>");
             for (var j= 0; j < this.width; j++) {
-                $("#content").append(this.squares[i][j].render());
+                $(".row:last-of-type").append(this.squares[i][j].render());
             }
         }
 
+        /*
         content.css("width", function() {
             return $(".square").width() * width + 20;
-        } );
+        } );*/
 
         $(".flagged").text(flag);
         $(".questioned").text(question);
@@ -135,10 +137,18 @@ function Board(width, numMines) {
 
     };
 
+
     // Define this here instead of in Square, where it would otherwise
     // cause multiple bindings.
     $("#content").on('mousedown', '.square', function(event) {
-        var index = $(this).index();
+
+        // When clicking on a square, we need to calculate which row that square is in.
+        // The square's parent is the row, so we can determine the index of the row we have clicked.
+        var rowIndex = $(this).parent().index();
+        // The column's index is the index of the square we have clicked in a particular row.
+        var colIndex = $(this).index();
+        var index = rowIndex * width + colIndex;
+
 
         // Recursively reveal the empty areas around the clicked position
         function recursiveReveal(i,j) {
