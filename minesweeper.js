@@ -2,7 +2,7 @@
 
 const mine = 'M';
 const empty = ' ';
-const flag = 'F'; //'\u2691'
+const flag = '\u2691'
 const question = '?';
 
 function Board(width, numMines) {
@@ -232,7 +232,7 @@ function Square(content) {
             if (this.content == mine)
                 displayString = this.content;
             else
-                displayString = this.nearbyMinesCount;
+                displayString = this.nearbyMinesCount || empty;
             theClass += " revealed";
         } else {
             theClass += " unrevealed";
