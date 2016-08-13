@@ -8,6 +8,7 @@ const question = '?';
 function Board(width, numMines) {
     this.width = width;
     this.numMines = numMines;
+    this.flagsRemaining = numMines;
     this.squares = [];
     var self = this;
 
@@ -27,8 +28,6 @@ function Board(width, numMines) {
         }
         return plantMines;
     };
-
-
 
     // Update the adjacent mine count for each square
     this.updateMineCounters = function () {
@@ -67,7 +66,6 @@ function Board(width, numMines) {
             }
         }
     };
-
 
     var mines = this.chooseMinePositions(this.width, this.numMines);
     for(var i=0; i < this.width; i++) {
@@ -113,17 +111,13 @@ function Board(width, numMines) {
     this.render = function () {
         var content = $("#content");
         content.empty();
+        //content.append("<span id='flags'>test</span>");
         for (var i = 0; i < this.width; i++) {
             $("#content").append("<div class='row'></div>");
             for (var j= 0; j < this.width; j++) {
                 $(".row:last-of-type").append(this.squares[i][j].render());
             }
         }
-
-        /*
-        content.css("width", function() {
-            return $(".square").width() * width + 20;
-        } );*/
 
         $(".flagged").text(flag);
         $(".questioned").text(question);

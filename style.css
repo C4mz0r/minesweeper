@@ -32,7 +32,6 @@ html {
     border-right: 4px solid gray;
 }
 
-
 .questioned {
     color: black;
 }
@@ -41,6 +40,10 @@ html {
     color: red;
 }
 
+#flags {
+    color: red;
+    background-color: black;
+}
 
 #gameOver {
     position: absolute;
