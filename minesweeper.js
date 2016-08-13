@@ -2,13 +2,13 @@
 
 const mine = 'M';
 const empty = ' ';
-const flag = '\u2691'
+const flag = '\u2691';
 const question = '?';
 
 function Board(width, numMines) {
     this.width = width;
     this.numMines = numMines;
-    this.flagsRemaining = numMines;
+    this.flagCount = numMines;
     this.squares = [];
     var self = this;
 
@@ -111,13 +111,19 @@ function Board(width, numMines) {
     this.render = function () {
         var content = $("#content");
         content.empty();
-        //content.append("<span id='flags'>test</span>");
         for (var i = 0; i < this.width; i++) {
             $("#content").append("<div class='row'></div>");
             for (var j= 0; j < this.width; j++) {
                 $(".row:last-of-type").append(this.squares[i][j].render());
             }
         }
+
+
+        var gameHeader = $("#gameHeader");
+        gameHeader.empty();
+        gameHeader.append("<span id='clock'>Clock</span><span id='time'>Time</span>");
+        gameHeader.append("<span id='flags'>"+this.flagCount+mine+"</span>");
+
 
         $(".flagged").text(flag);
         $(".questioned").text(question);
@@ -150,6 +156,8 @@ function Board(width, numMines) {
             if (j < 0 || j >= width) return;
             if (self.squares[i][j].revealed === true)
                 return;
+            if (self.squares[i][j].flagged === true)
+                return;
             if (self.squares[i][j].nearbyMinesCount > 0) {
                 self.squares[i][j].revealed = true;
                 return;
@@ -173,7 +181,8 @@ function Board(width, numMines) {
         if (event.which == 1)
             recursiveReveal(row,col);
 
-        self.squares[row][col].squareClicked(event);
+        self.flagCount += self.squares[row][col].squareClicked(event);
+        console.log("Flag count is " + self.flagCount);
 
         self.render();
     });
@@ -181,6 +190,16 @@ function Board(width, numMines) {
     $("#content").contextmenu(function() {
         return false;
     });
+
+    (function timer() {
+        var currentTime = 0;
+        var timerString = function() {
+            $("#time").text(currentTime);
+            currentTime++;
+        };
+        setInterval(timerString, 1000);
+    }());
+
 }
 
 function Square(content) {
@@ -195,10 +214,11 @@ function Square(content) {
     // is called.
     this.squareClicked = function(event) {
         if (event.which == 3) {
-            toggleStatus();
+            return toggleStatus();
         } else {
             reveal();
         }
+        return 0; // no change to flag count
     };
 
     var reveal = function() {
@@ -206,16 +226,23 @@ function Square(content) {
         self.revealed = true;
     };
 
+    // Toggle status and return the net amount of available flags
+    // resulting from the move (i.e. -1, 0 or 1)
     var toggleStatus = function() {
          if (!self.flagged && !self.questioned) {
-            self.flagged = true;
+             self.flagged = true;
+             return -1;
         } else if (self.flagged && !self.questioned) {
             self.flagged = false;
             self.questioned = true;
+             return +1;
         } else if (self.questioned) {
             self.flagged = false;
             self.questioned = false;
+             return 0;
         }
+
+        return 0;
     };
 
     this.render = function() {
@@ -240,6 +267,6 @@ function Square(content) {
     }
 }
 $(function(){
-    var board = new Board(9, 10);
+    var board = new Board(9, 1);
     board.render();
 });

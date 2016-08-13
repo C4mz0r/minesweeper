@@ -8,6 +8,14 @@ html {
     box-sizing: border-box;
 }
 
+#gameHeader {
+    clear: both;
+}
+
+#gameHeader #flags {
+    float: right;
+}
+
 .row {
     clear: both;
 }
