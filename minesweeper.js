@@ -121,9 +121,11 @@ function Board(width, numMines) {
 
         var gameHeader = $("#gameHeader");
         gameHeader.empty();
-        gameHeader.append("<span id='clock'>Clock</span><span id='time'>Time</span>");
-        gameHeader.append("<span id='flags'>"+this.flagCount+mine+"</span>");
-
+        gameHeader.append("<span id='clock'>Time: </span><span id='time'></span>");
+        gameHeader.append("<span id='flags'>Flagged: "+this.flagCount+"</span>");
+        console.log($(".square").width() * this.width);
+        var headerWidth = ($("div.square").width() + 2 * parseInt($("div.square").css("border-width"),10) )* this.width;
+        gameHeader.width(headerWidth);
 
         $(".flagged").text(flag);
         $(".questioned").text(question);
@@ -131,8 +133,10 @@ function Board(width, numMines) {
 
         if (this.isWinner()) {
             content.append("<div id='gameOver'>You win!</div>");
+            timer.stopTimer();
         } else if (this.isLoser()) {
             content.append("<div id='gameOver'>You blew it!</div>");
+            timer.stopTimer();
         };
 
     };
@@ -141,6 +145,9 @@ function Board(width, numMines) {
     // Define this here instead of in Square, where it would otherwise
     // cause multiple bindings.
     $("#content").on('mousedown', '.square', function(event) {
+
+        // Start the timer if not already going
+        timer.startTimer();
 
         // When clicking on a square, we need to calculate which row that square is in.
         // The square's parent is the row, so we can determine the index of the row we have clicked.
@@ -191,6 +198,7 @@ function Board(width, numMines) {
         return false;
     });
 
+    /*
     (function timer() {
         var currentTime = 0;
         var timerString = function() {
@@ -199,6 +207,28 @@ function Board(width, numMines) {
         };
         setInterval(timerString, 1000);
     }());
+    */
+
+    var Timer = function(){
+        var currentTime = 1;
+        var timerString = function() {
+            $("#time").text(currentTime);
+            currentTime++;
+        };
+        var timerId;
+        return {
+            startTimer: function() {
+                if (!timerId)
+                    timerId = setInterval(timerString, 1000);
+            },
+            stopTimer: function() {
+                clearInterval(timerId);
+            }
+        };
+    };
+
+    var timer = Timer();
+    //timer.startTimer();
 
 }
 
