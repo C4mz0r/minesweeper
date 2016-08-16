@@ -10,6 +10,7 @@ function Board(width, numMines) {
     this.numMines = numMines;
     this.flagCount = numMines;
     this.squares = [];
+    this.headerWidth = undefined;
     var self = this;
 
     // Initialized the grid
@@ -118,8 +119,8 @@ function Board(width, numMines) {
         gameHeader.append("<span id='clock'>Time: </span><span id='time'></span>");
         gameHeader.append("<span id='flags'>Flagged: "+this.flagCount+"</span>");
         console.log($(".square").width() * this.width);
-        var headerWidth = ($("div.square").width() + 2 * parseInt($("div.square").css("border-width"),10) )* this.width;
-        gameHeader.width(headerWidth);
+        this.headerWidth = this.headerWidth || ($("div.square").width() + 2 * parseInt($("div.square").css("border-width"),10) )* this.width;
+        gameHeader.width(this.headerWidth);
 
         $(".flagged").text(flag);
         $(".questioned").text(question);
@@ -127,9 +128,15 @@ function Board(width, numMines) {
 
         if (this.isWinner()) {
             content.append("<div id='gameOver'>You win!</div>");
+            var gameOver = $("#gameOver");
+            gameOver.css('width', this.headerWidth);
+            gameOver.css('height', this.headerWidth);
             timer.stopTimer();
         } else if (this.isLoser()) {
             content.append("<div id='gameOver'>You blew it!</div>");
+            var gameOver = $("#gameOver");
+            gameOver.css('width', this.headerWidth);
+            gameOver.css('height', this.headerWidth);
             timer.stopTimer();
         };
 
@@ -206,6 +213,7 @@ function Board(width, numMines) {
             },
             stopTimer: function() {
                 clearInterval(timerId);
+                $("#time").text(currentTime);
             }
         };
     };
@@ -283,6 +291,6 @@ function Square(content) {
     }
 }
 $(function(){
-    var board = new Board(9, 1);
+    var board = new Board(9, 10);
     board.render();
 });
