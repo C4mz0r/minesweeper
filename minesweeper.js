@@ -5,6 +5,23 @@ const empty = ' ';
 const flag = '\u2691';
 const question = '?';
 
+var Game = function() {
+    var _width = 9;
+    var _mines = 10;
+    return {
+        start: function () {
+            var board = new Board(_width, _mines);
+            board.render();
+        },
+
+        options: function (width, mines) {
+            _width = width;
+            _mines = mines;
+        }
+    }
+};
+
+
 function Board(width, numMines) {
     this.width = width;
     this.numMines = numMines;
@@ -291,6 +308,7 @@ function Square(content) {
     }
 }
 $(function(){
-    var board = new Board(9, 10);
-    board.render();
+    var game = Game();
+    game.options(20,5);
+    game.start();
 });
