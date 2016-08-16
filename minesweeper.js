@@ -192,17 +192,6 @@ function Board(width, numMines) {
         return false;
     });
 
-    /*
-    (function timer() {
-        var currentTime = 0;
-        var timerString = function() {
-            $("#time").text(currentTime);
-            currentTime++;
-        };
-        setInterval(timerString, 1000);
-    }());
-    */
-
     var Timer = function(){
         var currentTime = 1;
         var timerString = function() {
@@ -222,8 +211,6 @@ function Board(width, numMines) {
     };
 
     var timer = Timer();
-    //timer.startTimer();
-
 }
 
 function Square(content) {
@@ -240,6 +227,8 @@ function Square(content) {
         if (event.which == 3) {
             return toggleStatus();
         } else {
+            if (this.flagged || this.questioned)
+                return 0; // do not reveal squares that are flagged/questioned
             reveal();
         }
         return 0; // no change to flag count
@@ -253,6 +242,9 @@ function Square(content) {
     // Toggle status and return the net amount of available flags
     // resulting from the move (i.e. -1, 0 or 1)
     var toggleStatus = function() {
+        if (self.revealed) {
+            return 0;
+        }
          if (!self.flagged && !self.questioned) {
              self.flagged = true;
              return -1;
