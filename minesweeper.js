@@ -89,24 +89,18 @@ function Board(width, numMines) {
     };
 
     this.isWinner = function() {
-        var flaggedAndRevealed = function (totalMines) {
-            var correct = 0;
-            var allNonMinesRevealed = undefined;
-            for (var i = 0; i < self.width; i++) {
-                for (var j = 0; j < self.width; j++) {
-                    if (self.squares[i][j].content === mine && self.squares[i][j].flagged === true) {
-                        correct++;
-                    }
-                    else if (!(self.squares[i][j].content === empty && self.squares[i][j].revealed)) {
-                        allNonMinesRevealed = false;
-                        break;
+        var allNonMinesRevealed = function() {
+            for (var i=0; i < self.width; i++) {
+                for (var j=0; j < self.width; j++) {
+                    if (self.squares[i][j].content === empty && !self.squares[i][j].revealed) {
+                        return false;
                     }
                 }
             }
-            return (totalMines === correct && allNonMinesRevealed !== false);
+            return true;
         };
-    return flaggedAndRevealed(this.numMines);
-}
+        return allNonMinesRevealed();
+    };
 
     this.render = function () {
         var content = $("#content");
